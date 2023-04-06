@@ -12,10 +12,9 @@
     </h3>
 
     <%= link_to 'New Article', new_article_path %>
+    <%= render @articles %>
 
-    <% @articles.each do |article| %>
-      <%= render 'article' %>
-    <% end %>
-
+    <%= render 'pagination' %>
   </div>
+  <%= render 'right_side' %>
 </div>
