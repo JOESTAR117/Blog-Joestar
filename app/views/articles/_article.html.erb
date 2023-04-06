@@ -3,14 +3,15 @@
   <p class="blog-post-meta"><%= formatted_date(article.created_at) %>
     <a href="#">Chris</a></p>
 
-  <p><%= article.body %></p>
+  <p><%= truncate(article.body, length: 150)  %></p>
 
- <div class="d-flex flex-row">
-  <%= link_to 'Edit', edit_article_path(article), class: 'btn btn-secondary  m-1' %>
+  <p><%= link_to 'Continue reading...', article, class: 'btn btn-link' %></p>
+  <div class="d-flex flex-row">
+    <%= link_to 'Edit', edit_article_path(article), class: 'btn btn-secondary  m-1' %>
 
-  <%= button_to 'Destroy', article_path(article),form: { data: { turbo_confirm: "Are you sure?" } },
+    <%= button_to 'Destroy', article_path(article),form: { data: { turbo_confirm: "Are you sure?" } },
   method: :delete,
   class: 'btn btn-danger m-1' %>
- </div>
+  </div>
 
 </article>
