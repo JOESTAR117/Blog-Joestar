@@ -2,7 +2,9 @@ class ArticlesController < ApplicationController
   before_action :set_article, only: %i[show edit update destroy]
 
   def index
-    @articles = Article.order(created_at: :desc)
+    current_page = (params[:page] || 1).to_i
+
+    @articles = Article.page(current_page).per(2).order(created_at: :desc)
   end
 
   def show
