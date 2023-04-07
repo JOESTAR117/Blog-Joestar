@@ -31,11 +31,12 @@ class ArticlesController < ApplicationController
 
   def update
     @article
-
-    if @article.update(article_params)
-      redirect_to @article
-    else
-      render :edit
+    respond_to do |format|
+      if @article.update(article_params)
+        format.html { redirect_to @article, notice: 'Article was successfully updated.' }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
