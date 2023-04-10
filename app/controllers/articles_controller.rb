@@ -2,9 +2,15 @@ class ArticlesController < ApplicationController
   before_action :set_article, only: %i[show edit update destroy]
 
   def index
+    @highlights = Article.order(created_at: :desc).first(3)
+
     current_page = (params[:page] || 1).to_i
 
-    @articles = Article.page(current_page).per(2).order(created_at: :desc)
+    highlight_ids = @highlights.pluck(:id).join(',')
+
+    @articles = Article.order(created_at: :desc)
+                       .where("id NOT IN(#{highlight_ids})")
+                       .page(current_page).per(5)
   end
 
   def show
@@ -20,7 +26,9 @@ class ArticlesController < ApplicationController
 
     respond_to do |format|
       if @article.save
-        format.html { redirect_to @article, notice: 'Article was successfully created.' }
+        format.html do
+          redirect_to @article, notice: 'Article was successfully created.'
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
       end
@@ -35,7 +43,9 @@ class ArticlesController < ApplicationController
     @article
     respond_to do |format|
       if @article.update(article_params)
-        format.html { redirect_to @article, notice: 'Article was successfully updated.' }
+        format.html do
+          redirect_to @article, notice: 'Article was successfully updated.'
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -46,7 +56,9 @@ class ArticlesController < ApplicationController
     @article.destroy
 
     respond_to do |format|
-      format.html { redirect_to root_path, notice: 'Article was successfully destroyed.' }
+      format.html do
+        redirect_to root_path, notice: 'Article was successfully destroyed.'
+      end
     end
   end
 
