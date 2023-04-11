@@ -8,14 +8,17 @@ class ArticlesController < ApplicationController
 
     highlight_ids = @highlights.pluck(:id).join(',')
 
-    @articles = Article.order(created_at: :desc)
-                       .where("id NOT IN(#{highlight_ids})")
-                       .page(current_page).per(5)
+    @articles = if highlight_ids.present?
+                  Article.order(created_at: :desc)
+                         .where("id NOT IN(#{highlight_ids})")
+                         .page(current_page).per(5)
+                else
+                  Article.order(created_at: :desc)
+                         .page(current_page).per(5)
+                end
   end
 
-  def show
-    @article
-  end
+  def show; end
 
   def new
     @article = Article.new
@@ -35,9 +38,7 @@ class ArticlesController < ApplicationController
     end
   end
 
-  def edit
-    @article
-  end
+  def edit; end
 
   def update
     @article
