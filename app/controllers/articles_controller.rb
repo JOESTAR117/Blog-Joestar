@@ -2,19 +2,19 @@ class ArticlesController < ApplicationController
   before_action :set_article, only: %i[show edit update destroy]
 
   def index
-    @highlights = Article.order(created_at: :desc).first(3)
+    @highlights = Article.desc_order.first(3)
 
     current_page = (params[:page] || 1).to_i
 
     highlight_ids = @highlights.pluck(:id).join(',')
 
     @articles = if highlight_ids.present?
-                  Article.order(created_at: :desc)
-                         .where("id NOT IN(#{highlight_ids})")
-                         .page(current_page).per(5)
+                  Article.without_highlights(highlight_ids)
+                         .desc_order
+                         .page(current_page)
                 else
                   Article.order(created_at: :desc)
-                         .page(current_page).per(5)
+                         .page(current_page)
                 end
   end
 
